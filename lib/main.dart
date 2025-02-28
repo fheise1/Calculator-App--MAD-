@@ -30,12 +30,51 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  String _display = '';
+  String _operator = '';
+  int? _firstNumber;
+  int? _secondNumber;
 
-  void _incrementCounter() {
+  void _onNumberPress(int number) {
+    
+  }
+
+  void _onOperatorPress(String operator) {
+
+  }
+
+  void _onEqualsPress() {
+
+  }
+
+  void _onClearPress() {
     setState(() {
-      _counter++;
+      _display = '';
+      _firstNumber = null;
+      _secondNumber = null;
+      _operator = '';
     });
+  }
+
+  Widget _buttonMaker(String text, VoidCallback onPressed) {
+    return Expanded(
+      child: ElevatedButton(
+        onPressed: onPressed,
+        child: Text(text, style: const TextStyle(fontSize: 24)),
+      ),
+    );
+  }
+
+  VoidCallback _getOnPressedFunction(String text) {
+    if (text == 'C') {
+      return _onClearPress;
+    } else if (text == '=') {
+      return _onEqualsPress;
+    } else if (['+', '-', '*', '/'].contains(text)) {
+      return () => _onOperatorPress(text);
+    } else {
+      return () => _onNumberPress(int.parse(text));
+    }
   }
 
  @override
@@ -59,16 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ])
             Row(
               children: row.map((text) {
-                return _buildButton(
-                  text,
-                  text == 'C'
-                      ? _onClearPress
-                      : text == '='
-                          ? _onEqualsPress
-                          : ['+', '-', '*', '/'].contains(text)
-                              ? () => _onOperatorPress(text)
-                              : () => _onNumberPress(int.parse(text)),
-                );
+                return _buttonMaker(text, _getOnPressedFunction(text));
               }).toList(),
             ),
         ],
