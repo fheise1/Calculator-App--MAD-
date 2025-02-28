@@ -36,15 +36,52 @@ class _MyHomePageState extends State<MyHomePage> {
   int? _secondNumber;
 
   void _onNumberPress(int number) {
-    
+    setState(() {
+      _display += number.toString();
+    });
   }
 
   void _onOperatorPress(String operator) {
-
+    if (_display.isNotEmpty) {
+      setState(() {
+        _firstNumber = int.parse(_display);
+        _operator = operator;
+        _display = '';
+      });
+    }
   }
 
   void _onEqualsPress() {
+    if (_firstNumber != null && _operator.isNotEmpty && _display.isNotEmpty) {
+      _secondNumber = int.parse(_display);
+      int result = 0;
 
+      switch (_operator) {
+        case '+':
+          result = _firstNumber! + _secondNumber!;
+          break;
+        case '-':
+          result = _firstNumber! - _secondNumber!;
+          break;
+        case '*':
+          result = _firstNumber! * _secondNumber!;
+          break;
+        case '/':
+          if (_secondNumber == 0) {
+            _display = 'Error';
+            return;
+          }
+          result = _firstNumber! ~/ _secondNumber!;
+          break;
+      }
+
+      setState(() {
+        _display = result.toString();
+        _firstNumber = null;
+        _secondNumber = null;
+        _operator = '';
+      });
+    }
   }
 
   void _onClearPress() {
